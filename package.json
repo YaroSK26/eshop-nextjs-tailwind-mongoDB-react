@@ -8,6 +8,7 @@
     "multiparty": "^4.2.3",
     "react-sortablejs": "^6.1.4",
     "react-spinners": "^0.13.8",
+    "react-sweetalert2": "^0.5.2",
     "sortablejs": "^1.15.0"
   }
 }

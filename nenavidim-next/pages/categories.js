@@ -1,8 +1,17 @@
-import { useEffect, useState } from "react";
+
+  import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import Swal from "sweetalert2";
 
-export default function Categories() {
+
+
+
+
+
+function Categories(){ 
+
+  const [editedCategory, setEditedCategory] = useState(null)
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parentCategory, setParentCategory] = useState("");
@@ -19,21 +28,51 @@ export default function Categories() {
 
   async function saveCategory(ev) {
   ev.preventDefault();
-  const requestData = { name };
+  const data = { name, parentCategory };
   if (parentCategory) {
-    requestData.parentCategory = parentCategory;
+    data.parentCategory = parentCategory;
   }
-
-  await axios.post("/api/categories", requestData);
+  if (editedCategory) {
+    data._id = editedCategory._id
+    setEditedCategory(null)
+    await axios.put("/api/categories", data)
+    
+  } else {
+        await axios.post("/api/categories", data);
+  }
   setName("");
   fetchCategories();
+}
+
+function editCategory(category) {
+     setEditedCategory(category)
+     setName(category.name)
+     setParentCategory(category.parent?._id)
+}
+function deleteCategory(category) {
+  Swal.fire({
+    title: "Are you sure?", 
+    text: `Do you want to delete ${category.name}?`,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    confirmButtonText: "Yes, Delete!",
+    confirmButtonColor: "#d55",
+    reverseButtons: true,
+      
+  }).then(async result => {
+    if (result.isConfirmed) {
+      const {_id} = category
+      await axios.delete("/api/categories?_id="+_id)
+        fetchCategories()
+    }
+  })
 }
 
 
   return (
     <Layout>
       <h1>Categories</h1>
-      <label htmlFor="categories">New category name</label>
+      <label htmlFor="categories">{editedCategory ? `Edit category ${editedCategory.name}` : "Create new category" }</label>
 
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
@@ -67,6 +106,7 @@ export default function Categories() {
           <tr>
             <td>Category name</td>
             <td>Parent category</td>
+             <td></td>
           </tr>
         </thead>
         <tbody>
@@ -75,7 +115,11 @@ export default function Categories() {
               <tr key={category._id}>
                 <td>{category.name}</td>
                 <td>{category?.parent?.name}</td>
-
+                <td>
+                  
+                    <button onClick={() => editCategory(category)} className="btn-primary mr-1">Edit</button>
+                  <button className="btn-primary" onClick={() =>deleteCategory(category)}>Delete</button>
+                </td>
               </tr>
             ))}
         </tbody>
@@ -83,3 +127,5 @@ export default function Categories() {
     </Layout>
   );
 }
+ 
+export default Categories
