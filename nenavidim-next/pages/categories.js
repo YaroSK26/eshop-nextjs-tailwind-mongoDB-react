@@ -26,29 +26,33 @@ function Categories(){
     });
   }
 
-  async function saveCategory(ev) {
+async function saveCategory(ev) {
   ev.preventDefault();
-  const data = { name, parentCategory };
-  if (parentCategory) {
+  const data = { name };
+  if (parentCategory !== "") {
     data.parentCategory = parentCategory;
   }
+
   if (editedCategory) {
-    data._id = editedCategory._id
-    setEditedCategory(null)
-    await axios.put("/api/categories", data)
-    
+    data._id = editedCategory._id;
+    setEditedCategory(null);
+    await axios.put("/api/categories", data);
   } else {
-        await axios.post("/api/categories", data);
+    await axios.post("/api/categories", data);
   }
   setName("");
   fetchCategories();
 }
 
+
 function editCategory(category) {
-     setEditedCategory(category)
-     setName(category.name)
-     setParentCategory(category.parent?._id)
+  setEditedCategory(category);
+  setName(category.name)
+ setParentCategory(category.parent && category.parent._id !== "" ? category.parent._id : null);
+
+
 }
+
 function deleteCategory(category) {
   Swal.fire({
     title: "Are you sure?", 
