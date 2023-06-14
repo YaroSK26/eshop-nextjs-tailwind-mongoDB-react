@@ -10,7 +10,7 @@ export default async function handle(req,res) {
     }
 
     if (method === "POST") {
-    const {name, parentCategory} = req.body;
+    const {name, parentCategory,properties} = req.body;
     const categoryData = {name};
     if (parentCategory && parentCategory !== "") {
         categoryData.parent = parentCategory;
@@ -20,7 +20,7 @@ export default async function handle(req,res) {
 }
 
     if (method === "PUT") {
-    const {name, parentCategory, _id} = req.body;
+    const {name, parentCategory, _id,properties} = req.body;
     const categoryData = {name};
     if (parentCategory && parentCategory !== "") {
         categoryData.parent = parentCategory;

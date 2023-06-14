@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 
   import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -15,6 +16,7 @@ function Categories(){
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parentCategory, setParentCategory] = useState("");
+  const [properties, setProperties]  = useState([])
 
   useEffect(() => {
     fetchCategories();
@@ -28,7 +30,7 @@ function Categories(){
 
 async function saveCategory(ev) {
   ev.preventDefault();
-  const data = { name };
+  const data = { name,parentCategory,properties };
   if (parentCategory !== "") {
     data.parentCategory = parentCategory;
   }
@@ -53,6 +55,14 @@ function editCategory(category) {
 
 }
 
+function removeProperty(indexToRemove) {
+  setProperties(prev => {
+     return [...prev].filter((p,pIndex) => {
+        return pIndex !== indexToRemove
+    })
+  })
+}
+
 function deleteCategory(category) {
   Swal.fire({
     title: "Are you sure?", 
@@ -72,15 +82,36 @@ function deleteCategory(category) {
   })
 }
 
+ function addProperty() {
+    setProperties(prev => {
+      return [...prev, {name: "",values: ""}]
+    })
+ }
+
+ function handlePropertyNameChange(index,property,newName) {
+  setProperties(prev => {
+    const properties = [...prev]
+    properties[index].name = newName
+    return properties
+  })
+ }
+  function handlePropertyValuesChange(index,property,newValues) {
+  setProperties(prev => {
+    const properties = [...prev]
+    properties[index].values = newValues
+    return properties
+  })
+ }
+
 
   return (
     <Layout>
       <h1>Categories</h1>
       <label htmlFor="categories">{editedCategory ? `Edit category ${editedCategory.name}` : "Create new category" }</label>
 
-      <form onSubmit={saveCategory} className="flex gap-1">
-        <input
-          className="mb-0"
+      <form onSubmit={saveCategory} >
+          <div className="flex gap-1">
+                      <input
           value={name}
           onChange={(ev) => setName(ev.target.value)}
           type="text"
@@ -88,7 +119,6 @@ function deleteCategory(category) {
           placeholder={"Category name"}
         />
         <select
-          className="mb-0"
           value={parentCategory}
           onChange={(ev) => setParentCategory(ev.target.value)}
         >
@@ -100,12 +130,30 @@ function deleteCategory(category) {
               </option>
             ))}
         </select>
-        <button type="submit" className="btn-primary py-1">
-          Save
-        </button>
-      </form>
+          </div>
+          <div className="mb-2">
+            
+            <label className="block " >Properties</label>
+            <button type="button" className="btn-default text-sm" onClick={addProperty}>Add new property</button>
+            {properties.length > 0 && properties.map((property, index) => (
+              <div className="flex gap-1 mt-2">
+                <input className="mb-0" type="text" value={property.name} onChange={ev => handlePropertyNameChange(index,property, ev.target.value)} placeholder="property name (exmaple:color)" />
+                <input className="mb-0" type="text" value={property.values} onChange={ev => handlePropertyValuesChange(index,property, ev.target.value)} placeholder="values, comma separated " />
+                <button type="button" className="btn-default" onClick={ () => removeProperty(index)}>Remove</button>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-1">
+                      {editedCategory && (
+              <button type="button" className="btn-default" onClick={() => {setEditedCategory(null); setName(""); setParentCategory("");}}> Cancel </button>
+          )}
+          
+        <button type="submit" className="btn-primary py-1" > Save </button>
+          </div>
 
-      <table className="basic mt-4">
+      </form>
+              {!editedCategory && (
+                        <table className="basic mt-4">
         <thead>
           <tr>
             <td>Category name</td>
@@ -128,6 +176,8 @@ function deleteCategory(category) {
             ))}
         </tbody>
       </table>
+              )}
+
     </Layout>
   );
 }
