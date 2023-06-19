@@ -46,10 +46,11 @@ export default function ProductForm({
     };
     if (_id) {
       //update
-      await axios.put(`/api/products/${_id}`, data);
+      await axios.put(`/products/edit/${_id}`, data);
+
     } else {
       //create
-      await axios.post("/api/products", data);
+      await axios.post("/products/edit", data);
     }
     setGoToProducts(true);
   }
