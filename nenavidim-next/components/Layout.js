@@ -10,7 +10,8 @@ export default function Layout({children}) {
     return (
       <div className="bg-bgGray w-screen h-screen flex items-center">
         <div className="text-center w-full">
-          <button onClick={() => signIn('google')} className="bg-white p-2 px-4 rounded-lg">Login with Google</button>
+          <h1 className="text-2xl">Admin Page</h1>
+          <button onClick={() => signIn('google')} className="bg-white p-2 px-4 rounded-lg border-2 border-gray-800">Login with Google</button>
         </div>
       </div>
     );
@@ -30,7 +31,7 @@ export default function Layout({children}) {
       </div>
       <div className="flex">
         <Nav show={showNav} />
-        <div className="flex-grow p-4">
+        <div className="flex-grow p-4 ">
           {children}
         </div>
       </div>
