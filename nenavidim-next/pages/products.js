@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 export default function Products() {
   const [products,setProducts] = useState([]);
   useEffect(() => {
