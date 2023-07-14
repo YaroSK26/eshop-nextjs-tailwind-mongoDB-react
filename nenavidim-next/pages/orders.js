@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import Spinner from "../components/Spinner";
+
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
+  
+  const  [loaded, setLoaded] = useState(false);
   useEffect(() => {
+    setLoaded(true);
     axios.get("/api/orders").then((response) => {
+      
       setOrders(response.data);
+     
+      setLoaded(false);
     });
   }, []);
   return (
@@ -16,17 +24,28 @@ export default function OrdersPage() {
         <thead>
           <tr>
             <th>Date</th>
-
+            <th>Paid</th>
             <th>Recipient</th>
             <th>Products</th>
           </tr>
         </thead>
-        <tbody >
+        <tbody className="text-center">
+          {loaded && (
+            <tr>
+              <td colSpan={4}>
+                <div className="p-4">
+                  <Spinner fullWidth={true}></Spinner>
+                </div>
+              </td>
+            </tr>
+          )}
           {orders.length > 0 &&
             orders.map((order) => (
-              <tr className="text-center" key={order._id}>
+              <tr key={order._id}>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
-
+                <td className={order.paid ? "text-green-600" : "text-red-600 "}>
+                  {order.paid ? "YES" : "NO"}
+                </td>
                 <td>
                   {order.name} {order.email}
                   <br />
