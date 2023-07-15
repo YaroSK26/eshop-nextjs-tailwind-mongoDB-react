@@ -15,13 +15,13 @@ export default function Nav({ show }) {
     await signOut();
   }
   return (
-    <aside
+    <aside 
       className={
         (show ? "left-0" : "-left-full") +
-        " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-ful md:static md:w-auto transition-all"
+        " top-0 text-gray-500 p-4 fixed w-full bg-gray-100  md:static md:w-auto transition-all  dlzka"
       }
     >
-      <div className="mb-4 mr-4">
+      <div className="mb-4 mr-4 ">
         <Logo />
       </div>
       <nav className="flex flex-col gap-2">
@@ -122,9 +122,7 @@ export default function Nav({ show }) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={
-              pathname.includes("/admins") ? activeIcon : inactiveIcon
-            }
+            className={pathname.includes("/admins") ? activeIcon : inactiveIcon}
           >
             <path
               strokeLinecap="round"
