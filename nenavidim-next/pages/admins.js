@@ -65,7 +65,7 @@ function AdminsPage({ swal }) {
   return (
     <Layout>
       <h1>Admins</h1>
-      <h2>Add new admin</h2>
+      <h2 className="mb-2 mt-4">Add new admin</h2>
       <form onSubmit={addAdmin}>
         <div className="flex gap-2">
           <input
@@ -80,7 +80,7 @@ function AdminsPage({ swal }) {
         </div>
       </form>
 
-      <h2>Existing admins</h2>
+      <h2 className="mb-2 mt-4">Existing admins</h2>
       <table className="basic">
         <thead>
           <tr>
