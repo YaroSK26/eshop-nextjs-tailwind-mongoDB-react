@@ -4,47 +4,62 @@ import axios from "axios";
 import Spinner from "../components/Spinner";
 import { withSwal } from "react-sweetalert2";
 
- function SettingPage({swal}) {
+function SettingPage({ swal }) {
   const [products, setProducts] = useState([]);
-  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
-  const [featuredLoading, setFeaturedLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [featuredProductId, setFeaturedProductId] = useState("");
+  const [shippingFee, setShippingFee] = useState("");
 
   useEffect(() => {
-    setIsLoadingProduct(true);
-    
-    axios.get("/api/products").then((res) => {
-      setProducts(res.data);
-      setIsLoadingProduct(false);
-    });
-    
-     axios.get('/api/settings?name=featuredProductId').then(res => {
-      setFeaturedProductId(res.data.value);
-      setFeaturedLoading(false);
-    });
+    setIsLoading(true);
+    fetchAll().then(()=>{
+      setIsLoading(false);
+    })
   }, []);
 
+  async function fetchAll() {
+    
+   await axios.get("/api/products").then((res) => {
+      setProducts(res.data);
+    });
+    await axios.get("/api/settings?name=featuredProductId").then((res) => {
+      setFeaturedProductId(res.data.value);
+    });
+    await axios.get("/api/settings?name=shippingFee").then((res) => {
+      setShippingFee(res.data.value);
+    });
+  }
+
   async function saveSettings() {
-      
+    setIsLoading(true);
     await axios.put("/api/settings", {
       name: "featuredProductId",
       value: featuredProductId,
-    }).then(() => {
-        swal.fire({
-            title: "Settings saved",
-            icon: "success"
-        })
-    })
+    });
+    await axios.put("/api/settings", {
+      name: "shippingFee",
+      value: shippingFee,
+    });
+    setIsLoading(false);
+    await swal.fire({
+      title: "Settings saved",
+      icon: "success",
+    });
+
+    
   }
 
   return (
     <Layout>
       <h1>Settings</h1>
-      {(isLoadingProduct || featuredLoading )&& (<Spinner></Spinner>)}
-      {!isLoadingProduct && !featuredLoading &&(
+      { isLoading&& ( <Spinner></Spinner>)}
+      {!isLoading && (
         <>
           <label>Featured Product</label>
-          <select value={featuredProductId} onChange={(ev) => setFeaturedProductId(ev.target.value)}>
+          <select
+            value={featuredProductId}
+            onChange={(ev) => setFeaturedProductId(ev.target.value)}
+          >
             {products.length > 0 &&
               products.map((product) => (
                 <option key={product._id} value={product._id}>
@@ -52,6 +67,13 @@ import { withSwal } from "react-sweetalert2";
                 </option>
               ))}
           </select>
+
+          <label>Shipping fee (in €)</label>
+          <input
+            type="number"
+            value={shippingFee}
+            onChange={(ev) => setShippingFee(ev.target.value)}
+          />
           <div>
             <button onClick={saveSettings} className="btn-primary">
               Save settings
@@ -63,7 +85,4 @@ import { withSwal } from "react-sweetalert2";
   );
 }
 
-
-export default withSwal(({swal})=> (
-    <SettingPage swal={swal}/>
-))
+export default withSwal(({ swal }) => <SettingPage swal={swal} />);
