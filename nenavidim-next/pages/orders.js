@@ -55,10 +55,10 @@ export default function OrdersPage() {
                 </td>
                 <td>
                   {order.line_items.map((l) => (
-                    <>
+                    <div key={order._id}>
                       {l.price_data?.product_data.name} x{l.quantity}
                       <br />
-                    </>
+                    </div>
                   ))}
                 </td>
               </tr>
