@@ -23,12 +23,19 @@ export default function DeleteProductPage() {
        goBack()
     }
     return (
-        <Layout>
-            <h1 className="text-center">Do you really want to delete product &nbsp; "{productInfo?.title }" ? </h1> 
-            <div className="flex gap-2 justify-center">
-            <button className="btn-red" onClick={deleteProduct}>Yes</button>
-            <button className="btn-default" onClick={goBack} >No</button>
-            </div>
-        </Layout>
-    )
+      <Layout>
+        <h1 className="text-center">
+          Do you really want to delete product &nbsp; &quot;{productInfo?.title};
+          &quot;
+        </h1>
+        <div className="flex gap-2 justify-center">
+          <button className="btn-red" onClick={deleteProduct}>
+            Yes
+          </button>
+          <button className="btn-default" onClick={goBack}>
+            No
+          </button>
+        </div>
+      </Layout>
+    );
 }
