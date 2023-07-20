@@ -8,15 +8,18 @@ export default function Layout({ children }) {
   const { data: session } = useSession();
   if (!session) {
     return (
-      <div className="bg-bgGray w-screen h-screen flex items-center">
-        <div className="text-center w-full">
-          <h1 className="text-2xl">Admin Page</h1>
-          <button
-            onClick={() => signIn("google")}
-            className="bg-white p-2 px-4 rounded-lg border-2 border-gray-800"
-          >
-            Login with Google
-          </button>
+      <div>
+        <div className="bg-bgGray w-screen h-screen flex items-center">
+          <div className="text-center w-full">
+            <h1 className="text-2xl mb-1">Admin Page</h1>
+            <p className=" mb-8">Only real admins can sign in </p>
+            <button
+              onClick={() => signIn("google")}
+              className="bg-white p-2 px-4 rounded-lg border-2 border-gray-800"
+            >
+              Login with Google
+            </button>
+          </div>
         </div>
       </div>
     );
